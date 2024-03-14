@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class CourseController {
     }
 
     @PostMapping("/addcourse")
-    public String addCourse(@Valid Course course, BindingResult result, Model model){
+    public String addCourse(@Valid Course course, BindingResult result, Model model) {
         if (result.hasErrors()) {
             return "add-course";
         }
@@ -72,4 +72,3 @@ public class CourseController {
         return "redirect:/index";
     }
 }
-
