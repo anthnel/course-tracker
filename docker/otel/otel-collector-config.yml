@@ -1,0 +1,45 @@
+# extensions:
+#   bearertokenauth/withscheme:
+#     scheme: "Bearer"
+#     token: "${env:ELASTIC_APM_SECRET_TOKEN}"
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      # http:
+      #   endpoint: 0.0.0.0:4318
+
+processors:
+  # ...
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 2000
+  batch:
+
+exporters:
+  debug:
+    verbosity: detailed
+
+  otlphttp/withauth:
+    # Elastic APM server https endpoint without the "https://" prefix
+    endpoint: "http://${env:ELASTIC_APM_SERVER_ENDPOINT}"
+    # auth:
+    #   authenticator: bearertokenauth/withscheme
+    headers:
+      # Elastic APM Server secret token
+      Authorization: "Bearer ${env:ELASTIC_APM_SECRET_TOKEN}"
+
+service:
+  # extensions: [bearertokenauth/withscheme]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [debug, otlphttp/withauth]
+    metrics:
+      receivers: [otlp]
+      exporters: [debug, otlphttp/withauth]
+    logs:
+      receivers: [otlp]
+      exporters: [debug, otlphttp/withauth]

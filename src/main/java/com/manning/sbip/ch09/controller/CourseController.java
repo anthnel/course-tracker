@@ -3,6 +3,8 @@ package com.manning.sbip.ch09.controller;
 import com.manning.sbip.ch09.model.Course;
 import com.manning.sbip.ch09.service.CourseService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,6 +16,8 @@ import java.util.List;
 
 @Controller
 public class CourseController {
+
+    private static final Logger logger = LoggerFactory.getLogger(CourseController.class);
 
     private final CourseService courseService;
 
@@ -30,6 +34,9 @@ public class CourseController {
     public String index(Model model) {
         List<Course> courseList = (List<Course>) courseService.findAllCourses();
         model.addAttribute("courses", courseList.isEmpty() ? Collections.EMPTY_LIST : courseList);
+
+        logger.info("récupération de tous les cours: {}", courseList);
+
         return "index";
     }
 
@@ -45,6 +52,9 @@ public class CourseController {
         }
         courseService.createCourse(course);
         model.addAttribute("courses", courseService.findAllCourses());
+
+        logger.info("création du cours : {}", course);
+
         return "redirect:/index";
     }
 
@@ -62,6 +72,9 @@ public class CourseController {
         }
         courseService.updateCourse(course);
         model.addAttribute("courses", courseService.findAllCourses());
+
+        logger.info("mise à jour du cours : {}", course);
+
         return "redirect:/index";
     }
 
@@ -69,6 +82,9 @@ public class CourseController {
     public String deleteCourse(@PathVariable("id") Long id, Model model) {
         courseService.deleteCourseById(id);
         model.addAttribute("courses", courseService.findAllCourses());
+
+        logger.info("suppression du cours : {}", id);
+
         return "redirect:/index";
     }
 }
