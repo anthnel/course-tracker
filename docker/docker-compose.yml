@@ -145,78 +145,6 @@ services:
       timeout: 10s
       retries: 120
 
-  # metricbeat01:
-  #   depends_on:
-  #     es01:
-  #       condition: service_healthy
-  #     kibana:
-  #       condition: service_healthy
-  #   image: docker.elastic.co/beats/metricbeat:${STACK_VERSION}
-  #   user: root
-  #   volumes:
-  #     - certs:/usr/share/metricbeat/certs
-  #     - metricbeatdata01:/usr/share/metricbeat/data
-  #     - "./metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro"
-  #     - "/var/run/docker.sock:/var/run/docker.sock:ro"
-  #     - "/sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro"
-  #     - "/proc:/hostfs/proc:ro"
-  #     - "/:/hostfs:ro"
-  #   environment:
-  #     - ELASTIC_USER=elastic
-  #     - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-  #     - ELASTIC_HOSTS=https://es01:9200
-  #     - KIBANA_HOSTS=https://kibana:5601
-  #     - LOGSTASH_HOSTS=http://logstash01:9600
-  #     - CA_CERT=certs/ca/ca.crt
-  #     - ES_CERT=certs/es01/es01.crt
-  #     - ES_KEY=certs/es01/es01.key
-  #     - KB_CERT=certs/kibana/kibana.crt
-  #     - KB_KEY=certs/kibana/kibana.key
-  #   command: -strict.perms=false
-
-  # filebeat01:
-  #   depends_on:
-  #     es01:
-  #       condition: service_healthy
-  #   image: docker.elastic.co/beats/filebeat:${STACK_VERSION}
-  #   user: root
-  #   volumes:
-  #     - certs:/usr/share/filebeat/certs
-  #     - filebeatdata01:/usr/share/filebeat/data
-  #     - "./filebeat_ingest_data/:/usr/share/filebeat/ingest_data/"
-  #     - "./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro"
-  #     - "/var/lib/docker/containers:/var/lib/docker/containers:ro"
-  #     - "/var/run/docker.sock:/var/run/docker.sock:ro"
-  #   environment:
-  #     - ELASTIC_USER=elastic
-  #     - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-  #     - ELASTIC_HOSTS=https://es01:9200
-  #     - KIBANA_HOSTS=https://kibana:5601
-  #     - LOGSTASH_HOSTS=http://logstash01:9600
-  #     - CA_CERT=certs/ca/ca.crt
-  #   command: -strict.perms=false
-
-  # logstash01:
-  #   depends_on:
-  #     es01:
-  #       condition: service_healthy
-  #     kibana:
-  #       condition: service_healthy
-  #   image: docker.elastic.co/logstash/logstash:${STACK_VERSION}
-  #   labels:
-  #     co.elastic.logs/module: logstash
-  #   user: root
-  #   volumes:
-  #     - certs:/usr/share/logstash/certs
-  #     - logstashdata01:/usr/share/logstash/data
-  #     - "./logstash_ingest_data/:/usr/share/logstash/ingest_data/"
-  #     - "./logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro"
-  #   environment:
-  #     - xpack.monitoring.enabled=false
-  #     - ELASTIC_USER=elastic
-  #     - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-  #     - ELASTIC_HOSTS=https://es01:9200
-
   fleet-server:
     depends_on:
       kibana:
@@ -256,6 +184,25 @@ services:
       - KIBANA_FLEET_USERNAME=elastic
       - KIBANA_FLEET_PASSWORD=${ELASTIC_PASSWORD}
       - KIBANA_HOST=https://kibana:5601
+      
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.96.0
+    command: [ "--config=/etc/otelcol-contrib/config.yaml" ]
+    environment:
+      - ELASTIC_APM_SECRET_TOKEN=${ELASTIC_APM_SECRET_TOKEN}
+      - ELASTIC_APM_SERVER_ENDPOINT=fleet-server:8200
+    volumes:
+      - ./otel/otel-collector-config.yml:/etc/otelcol-contrib/config.yaml
+      - certs:/certs
+    ports:
+      # - 1888:1888 # pprof extension
+      # - 8888:8888 # Prometheus metrics exposed by the Collector
+      # - 8889:8889 # Prometheus exporter metrics
+      # - 13133:13133 # health_check extension
+      - 4317:4317 # OTLP gRPC receiver
+      - 4318:4318 # OTLP http receiver
+      # - 55679:55679 # zpages extension
 
 volumes:
   certs:
@@ -264,12 +211,6 @@ volumes:
     driver: local
   kibanadata:
     driver: local
-  # metricbeatdata01:
-  #   driver: local
-  # filebeatdata01:
-  #   driver: local
-  # logstashdata01:
-  #   driver: local
   fleetserverdata:
     driver: local
 
