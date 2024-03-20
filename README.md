@@ -19,5 +19,5 @@ todo :
           certificate_authorities : ["/certs/ca/ca.crt"]
         ```
 * voir pourquoi le champ service.name n'est pas enrichi
-* configurer l'auto instrumentalisation avec spring-boot
+* configurer l'auto instrumentation avec spring-boot
 * tester les traces et les métriques

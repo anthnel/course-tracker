@@ -1,4 +1,6 @@
-# extensions:
+extensions:
+   # exposes http://localhost:13133 by default which we can use to query the health status of collector. https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/extension/healthcheckextension
+  health_check:
 #   bearertokenauth/withscheme:
 #     scheme: "Bearer"
 #     token: "${env:ELASTIC_APM_SECRET_TOKEN}"
@@ -8,8 +10,8 @@ receivers:
     protocols:
       grpc:
         endpoint: 0.0.0.0:4317
-      # http:
-      #   endpoint: 0.0.0.0:4318
+      http:
+        endpoint: 0.0.0.0:4318
 
 processors:
   # ...
@@ -32,7 +34,7 @@ exporters:
       Authorization: "Bearer ${env:ELASTIC_APM_SECRET_TOKEN}"
 
 service:
-  # extensions: [bearertokenauth/withscheme]
+  extensions: [health_check]
   pipelines:
     traces:
       receivers: [otlp]
@@ -42,4 +44,5 @@ service:
       exporters: [debug, otlphttp/withauth]
     logs:
       receivers: [otlp]
+      processors: [batch]
       exporters: [debug, otlphttp/withauth]
