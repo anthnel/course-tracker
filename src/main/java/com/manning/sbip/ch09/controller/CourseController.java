@@ -35,7 +35,7 @@ public class CourseController {
         List<Course> courseList = (List<Course>) courseService.findAllCourses();
         model.addAttribute("courses", courseList.isEmpty() ? Collections.EMPTY_LIST : courseList);
 
-        logger.info("récupération de tous les cours: {}", courseList);
+        logger.info("récupération de tous les cours");
 
         return "index";
     }
