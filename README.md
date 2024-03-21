@@ -1,6 +1,7 @@
 # Course Tracker
 
 Application Web de démo qui utilise spring boot.
+
 Cette application est utilisée pour démontrer les fonctionnalités de la plateforme DevSecOps mais aussi comme test pour la mise en place d'un environnement de développement.
 
 ## avancement

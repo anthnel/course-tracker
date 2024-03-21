@@ -19,19 +19,20 @@ public class CourseTrackerSpringBootApplication {
         app.run(args);
     }
 
-    @Bean
-    public OpenTelemetry openTelemetry() {
-        OpenTelemetrySdk openTelemetry = AutoConfiguredOpenTelemetrySdk.initialize().getOpenTelemetrySdk();
+    // @Bean
+    // public OpenTelemetry openTelemetry() {
+    // OpenTelemetrySdk openTelemetry =
+    // AutoConfiguredOpenTelemetrySdk.initialize().getOpenTelemetrySdk();
 
-        // Find OpenTelemetryAppender in logback configuration and install
-        // openTelemetrySdk
-        OpenTelemetryAppender.install(openTelemetry);
+    // // Find OpenTelemetryAppender in logback configuration and install
+    // // openTelemetrySdk
+    // OpenTelemetryAppender.install(openTelemetry);
 
-        // Add hook to close SDK, which flushes logs
-        Runtime.getRuntime().addShutdownHook(new Thread(openTelemetry::close));
+    // // Add hook to close SDK, which flushes logs
+    // Runtime.getRuntime().addShutdownHook(new Thread(openTelemetry::close));
 
-        return openTelemetry;
+    // return openTelemetry;
 
-    }
+    // }
 
 }
