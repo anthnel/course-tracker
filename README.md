@@ -22,5 +22,15 @@ Cette application est utilisée pour démontrer les fonctionnalités de la plate
 - [x] configurer l'auto instrumentation avec spring-boot
 - [x] instrumentation des traces distribuées
 - [ ] instrumentation des métriques
-- [ ] remplacement de la db h2 par une db postgres
+- [x] remplacement de la db h2 par une db postgres
+
+## Stack d'observabilité
+
+La stack testée est celle d'ELK (Elastic Logstash Kibana).
+
+Pour la démarrer :
+
+```sh
+docker compose -f docker/observability.yml up
+```
 
