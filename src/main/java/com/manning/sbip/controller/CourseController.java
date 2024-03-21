@@ -1,7 +1,7 @@
-package com.manning.sbip.ch09.controller;
+package com.manning.sbip.controller;
 
-import com.manning.sbip.ch09.model.Course;
-import com.manning.sbip.ch09.service.CourseService;
+import com.manning.sbip.model.Course;
+import com.manning.sbip.service.CourseService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

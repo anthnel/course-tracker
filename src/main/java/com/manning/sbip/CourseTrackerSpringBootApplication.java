@@ -1,4 +1,4 @@
-package com.manning.sbip.ch09;
+package com.manning.sbip;
 
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;

@@ -21,5 +21,5 @@ Cette application est utilisée pour démontrer les fonctionnalités de la plate
 - [x] configurer l'auto instrumentation avec spring-boot
 - [x] instrumentation des traces distribuées
 - [ ] instrumentation des métriques
-- [ ] remplacement de la db db2 par une db postgres
+- [ ] remplacement de la db h2 par une db postgres
 

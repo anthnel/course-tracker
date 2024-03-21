@@ -1,4 +1,4 @@
-package com.manning.sbip.ch09.model;
+package com.manning.sbip.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
