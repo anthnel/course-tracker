@@ -1,3 +1,5 @@
+#!/bin/bash
+
 export JAVA_TOOL_OPTIONS=-javaagent:opentelemetry-javaagent-2.2.0.jar
 #export OTEL_TRACES_EXPORTER=none 
 export OTEL_METRICS_EXPORTER=none

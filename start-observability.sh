@@ -1,0 +1,1 @@
+docker compose -f docker/docker-compose.yml up -d setup es01 kibana fleet-server
