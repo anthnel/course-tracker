@@ -195,7 +195,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
             <scope>test</scope>
-        </dependency>        
+        </dependency>
 
     </dependencies>
     <build>

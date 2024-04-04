@@ -1,0 +1,34 @@
+services:
+  course-tracker:
+    depends_on:
+      postgres:
+        condition: service_healthy
+    image: "course-tracker:1.0.0"
+    container_name: "course-tracker"
+    ports:
+      - 8080:8080
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/sbip
+      - JAVA_TOOL_OPTIONS=-javaagent:/workspace/BOOT-INF/lib/opentelemetry-javaagent-2.2.0.jar
+      # - export OTEL_TRACES_EXPORTER=none
+      - export OTEL_METRICS_EXPORTER=none
+      # - export OTEL_LOGS_EXPORTER=logging
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://host.docker.internal:4318
+      - OTEL_METRIC_EXPORT_INTERVAL=15000
+      # - OTEL_PROPAGATORS="tracecontext,baggage"
+
+  postgres:
+    image: "postgres:15.2"
+    container_name: "sbip-postgres"
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - ./docker/postgresql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user"]
+      interval: 2s
+      timeout: 5s
+      retries: 20
