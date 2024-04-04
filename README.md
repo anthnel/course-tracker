@@ -23,14 +23,15 @@ Cette application est utilisée pour démontrer les fonctionnalités de la plate
 - [x] instrumentation des traces distribuées
 - [ ] instrumentation des métriques
 - [x] remplacement de la db h2 par une db postgres
+- [x] test d'intégration
 
 ## Stack d'observabilité
 
-La stack testée est celle d'ELK (Elastic Logstash Kibana).
+La stack ELK a été externalisée dans le projet https://github.com/anthnel/elk.
 
-Pour la démarrer :
+## OpenTelemetry
 
-```sh
-docker compose -f docker/observability.yml up
-```
+Ce projet envoie des logs et des traces au moyen d'un collector.
+
+Le collector doit pointer vers le backend adéquat. La configuration est réalisée au moyen de variables d'environnement dans le fichier `docker-compose.yaml`.
 

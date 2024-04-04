@@ -13,7 +13,7 @@ services:
       # - export OTEL_TRACES_EXPORTER=none
       - export OTEL_METRICS_EXPORTER=none
       # - export OTEL_LOGS_EXPORTER=logging
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://host.docker.internal:4318
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4318
       - OTEL_METRIC_EXPORT_INTERVAL=15000
       # - OTEL_PROPAGATORS="tracecontext,baggage"
 
@@ -32,3 +32,20 @@ services:
       interval: 2s
       timeout: 5s
       retries: 20
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.96.0
+    command: ["--config=/etc/otelcol-contrib/config.yaml"]
+    environment:
+      - ELASTIC_APM_SECRET_TOKEN=supersecrettoken
+      - ELASTIC_APM_SERVER_ENDPOINT=ec2-52-47-68-47.eu-west-3.compute.amazonaws.com:8200
+    volumes:
+      - ./docker/otel/otel-collector-config.yml:/etc/otelcol-contrib/config.yaml
+    ports:
+      # - 1888:1888 # pprof extension
+      # - 8888:8888 # Prometheus metrics exposed by the Collector
+      # - 8889:8889 # Prometheus exporter metrics
+      # - 13133:13133 # health_check extension
+      - 4317:4317 # OTLP gRPC receiver
+      - 4318:4318 # OTLP http receiver
+      # - 55679:55679 # zpages extension
